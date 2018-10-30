@@ -17,8 +17,9 @@ func handleRequest() {
 	myRouter.HandleFunc("/", helloWorld).Methods("GET")
 	myRouter.HandleFunc("/rings", AllRings).Methods("GET")
 	myRouter.HandleFunc("/rings", NewRing).Methods("POST")
-	myRouter.HandleFunc("/ring/{id}", DeleteRing).Methods("DELETE")
-	myRouter.HandleFunc("/ring/{id}", UpdateRing).Methods("PUT")
+	myRouter.HandleFunc("/rings/{id}", ShowRing).Methods("GET")
+	myRouter.HandleFunc("/rings/{id}", DeleteRing).Methods("DELETE")
+	myRouter.HandleFunc("/rings/{id}", UpdateRing).Methods("PUT")
 	log.Fatal(http.ListenAndServe(":3000", myRouter))
 }
 

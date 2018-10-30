@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -67,8 +68,38 @@ func NewRing(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rings)
 }
 
+func ShowRing(w http.ResponseWriter, r *http.Request) {
+	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	if err != nil {
+		panic("Could not connect to the database")
+	}
+	defer db.Close()
+
+	vars := mux.Vars(r)
+	ringID := vars["id"]
+
+	var ring Ring
+	db.Where("ID = ?", ringID).Find(&ring)
+	if ring.ID > 0 {
+		json.NewEncoder(w).Encode(ring)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
+}
+
 func DeleteRing(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "delete rings")
+	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	if err != nil {
+		panic("Could not connect to the database")
+	}
+	defer db.Close()
+
+	vars := mux.Vars(r)
+	ringID := vars["id"]
+
+	var ring Ring
+	db.Where("ID = ?", ringID).Find(&ring)
+	db.Delete(&ring)
 }
 
 func UpdateRing(w http.ResponseWriter, r *http.Request) {
