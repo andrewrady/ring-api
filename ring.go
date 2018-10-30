@@ -41,7 +41,7 @@ func AllRings(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	var rings []Ring
-	db.Find(&rings)
+	db.Order("ID asc").Find(&rings)
 	json.NewEncoder(w).Encode(rings)
 }
 
