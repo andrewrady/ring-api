@@ -103,5 +103,34 @@ func DeleteRing(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateRing(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "updated ring endpoint")
+	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	if err != nil {
+		panic("Could not connect to the database")
+	}
+	defer db.Close()
+
+	vars := mux.Vars(r)
+	ringID := vars["id"]
+
+	var updatedRing Ring
+	decoder := json.NewDecoder(r.Body)
+
+	err := decoder.Decode(&updatedRing)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var ring Ring
+	db.Where("ID = ?", ringID).Find(&ring)
+
+	ring.RingNumber = updatedRing.RingNumber
+	ring.Age = updatedRing.Age
+	ring.Rank = updatedRing.Rank
+	ring.Division = updatedRing.Division
+	ring.Gender = updatedRing.Division
+
+	db.Save(&ring)
+
+	json.NewEncoder(w).Encode(&ring)
 }
