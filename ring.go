@@ -123,14 +123,18 @@ func UpdateRing(w http.ResponseWriter, r *http.Request) {
 
 	var ring Ring
 	db.Where("ID = ?", ringID).Find(&ring)
+	if ring.ID > 0 {
+		ring.RingNumber = updatedRing.RingNumber
+		ring.Age = updatedRing.Age
+		ring.Rank = updatedRing.Rank
+		ring.Division = updatedRing.Division
+		ring.Gender = updatedRing.Division
 
-	ring.RingNumber = updatedRing.RingNumber
-	ring.Age = updatedRing.Age
-	ring.Rank = updatedRing.Rank
-	ring.Division = updatedRing.Division
-	ring.Gender = updatedRing.Division
+		db.Save(&ring)
 
-	db.Save(&ring)
+		json.NewEncoder(w).Encode(&ring)
+	} else {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+	}
 
-	json.NewEncoder(w).Encode(&ring)
 }
