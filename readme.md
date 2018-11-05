@@ -4,7 +4,6 @@ This api is to replace an old rails web application that displays rings for mart
 
 - User Model
 - Authentication using JWT
-- Ring model needs to have `status` added to it
 
 ## Development 
-You will need the latest version of `Go` install, mux, gorm. Postgress is the database used for this application
+You will need the latest version of `Go` installed, mux, gorm. Postgress is the database used for this application
