@@ -20,6 +20,7 @@ type Ring struct {
 	Rank       string
 	Division   string
 	Gender     string
+	Status     bool
 }
 
 func InitialMigration() {
@@ -61,7 +62,7 @@ func NewRing(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	db.Create(&Ring{RingNumber: newRing.RingNumber, Age: newRing.Age, Rank: newRing.Rank, Division: newRing.Division, Gender: newRing.Gender})
+	db.Create(&Ring{RingNumber: newRing.RingNumber, Age: newRing.Age, Rank: newRing.Rank, Division: newRing.Division, Gender: newRing.Gender, Status: newRing.Status})
 
 	var rings []Ring
 	db.Last(&rings)
@@ -129,6 +130,7 @@ func UpdateRing(w http.ResponseWriter, r *http.Request) {
 		ring.Rank = updatedRing.Rank
 		ring.Division = updatedRing.Division
 		ring.Gender = updatedRing.Division
+		ring.Status = updatedRing.Status
 
 		db.Save(&ring)
 
