@@ -20,6 +20,10 @@ func handleRequest() {
 	myRouter.HandleFunc("/rings/{id}", ShowRing).Methods("GET")
 	myRouter.HandleFunc("/rings/{id}", DeleteRing).Methods("DELETE")
 	myRouter.HandleFunc("/rings/{id}", UpdateRing).Methods("PUT")
+	//User Routes
+	myRouter.HandleFunc("/users", GetUsers).Methods("GET")
+	myRouter.HandleFunc("/users", NewUser).Methods("POST")
+	myRouter.HandleFunc("/users/login", UserLogin).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", myRouter))
 }
 
