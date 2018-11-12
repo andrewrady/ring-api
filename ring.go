@@ -24,7 +24,7 @@ type Ring struct {
 }
 
 func InitialMigration() {
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err := gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		fmt.Println(err.Error())
 		panic("Failed to connect to database")
@@ -35,7 +35,7 @@ func InitialMigration() {
 }
 
 func AllRings(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -47,7 +47,7 @@ func AllRings(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -70,7 +70,7 @@ func NewRing(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShowRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -89,7 +89,7 @@ func ShowRing(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -104,7 +104,7 @@ func DeleteRing(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}

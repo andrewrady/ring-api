@@ -18,7 +18,7 @@ type User struct {
 }
 
 func NewUser(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -40,7 +40,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -52,7 +52,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=ring_tracker password=postgres sslmode=disable")
+	db, err = gorm.Open("postgres", dbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}

@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
 	"github.com/gorilla/mux"
 )
 
-var mySigningKey = []byte("superSecretKey")
-
-func helloWorld(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World")
-}
+var mySigningKey = []byte(os.Getenv("mySigningKey"))
+var dbConnectionString = "host=" + os.Getenv("dbHost") + " port=" + os.Getenv("dbPort") + " user=" + os.Getenv("dbUser") + " dbname=" + os.Getenv("dbName") + " password=" + os.Getenv("dbPassword") + " sslmode=disable"
 
 func handleRequest() {
 	myRouter := mux.NewRouter().StrictSlash(true)
@@ -24,8 +22,8 @@ func handleRequest() {
 	myRouter.Handle("/rings/{id}", isAuthorized(DeleteRing)).Methods("DELETE")
 	myRouter.Handle("/rings/{id}", isAuthorized(UpdateRing)).Methods("PUT")
 	//User Routes
-	myRouter.HandleFunc("/users", GetUsers).Methods("GET")
-	myRouter.HandleFunc("/users", NewUser).Methods("POST")
+	myRouter.Handle("/users", isAuthorized(GetUsers)).Methods("GET")
+	myRouter.Handle("/users", isAuthorized(NewUser)).Methods("POST")
 	myRouter.HandleFunc("/users/login", UserLogin).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", myRouter))
 }
@@ -34,7 +32,7 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handle
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		if r.Header["Authorization"] != nil {
-			token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
+			token, err := jwt.Parse(r.Header["Authorization"][0], func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("There was an error")
 				}
