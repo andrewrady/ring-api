@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
-	"golang.org/x/crypto/bcrypt"
-
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -69,7 +70,11 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	db.Where("EMAIL = ?", requestUser.Email).Find(&user)
 	if user.ID > 0 {
 		if CompareHashedPassword(user.Password, []byte(requestUser.Password)) {
-			json.NewEncoder(w).Encode(user)
+			jwt, err := GenerateJWT()
+			if err != nil {
+				panic("Error creating JWT")
+			}
+			json.NewEncoder(w).Encode(jwt)
 		} else {
 			w.WriteHeader(http.StatusNotFound)
 		}
@@ -96,4 +101,23 @@ func CompareHashedPassword(hashedPassword string, plainPassword []byte) bool {
 	} else {
 		return true
 	}
+}
+
+func GenerateJWT() (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+
+	claims["authorized"] = true
+	claims["user"] = "test"
+	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
+
+	tokenString, err := token.SignedString(mySigningKey)
+
+	if err != nil {
+		panic(err)
+		return "", err
+	}
+
+	return tokenString, nil
 }
