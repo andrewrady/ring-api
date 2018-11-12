@@ -70,7 +70,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	db.Where("EMAIL = ?", requestUser.Email).Find(&user)
 	if user.ID > 0 {
 		if CompareHashedPassword(user.Password, []byte(requestUser.Password)) {
-			jwt, err := GenerateJWT()
+			jwt, err := GenerateJWT(user.Email)
 			if err != nil {
 				panic("Error creating JWT")
 			}
@@ -103,20 +103,19 @@ func CompareHashedPassword(hashedPassword string, plainPassword []byte) bool {
 	}
 }
 
-func GenerateJWT() (string, error) {
+func GenerateJWT(user string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["user"] = "test"
+	claims["user"] = user
 	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
 
 	if err != nil {
 		panic(err)
-		return "", err
 	}
 
 	return tokenString, nil
