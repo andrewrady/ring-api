@@ -1,9 +1,11 @@
-package main
+package rings
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	Config "rings-api/config"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -23,8 +25,9 @@ type Ring struct {
 	Status     bool
 }
 
+//InitialMigration initial connection to database
 func InitialMigration() {
-	db, err := gorm.Open("postgres", dbConnectionString)
+	db, err := gorm.Open("postgres", Config.DbConnectionString)
 	if err != nil {
 		fmt.Println(err.Error())
 		panic("Failed to connect to database")
@@ -34,8 +37,9 @@ func InitialMigration() {
 	db.AutoMigrate(&Ring{})
 }
 
+//AllRings return json for every ring
 func AllRings(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", dbConnectionString)
+	db, err = gorm.Open("postgres", Config.DbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -46,8 +50,9 @@ func AllRings(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rings)
 }
 
+//NewRing creates new record
 func NewRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", dbConnectionString)
+	db, err = gorm.Open("postgres", Config.DbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -69,8 +74,9 @@ func NewRing(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rings)
 }
 
+//ShowRing shows one ring based on id passed in params
 func ShowRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", dbConnectionString)
+	db, err = gorm.Open("postgres", Config.DbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -88,8 +94,9 @@ func ShowRing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//DeleteRing deletes ring
 func DeleteRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", dbConnectionString)
+	db, err = gorm.Open("postgres", Config.DbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}
@@ -103,8 +110,9 @@ func DeleteRing(w http.ResponseWriter, r *http.Request) {
 	db.Delete(&ring)
 }
 
+//UpdateRing updates the ring record
 func UpdateRing(w http.ResponseWriter, r *http.Request) {
-	db, err = gorm.Open("postgres", dbConnectionString)
+	db, err = gorm.Open("postgres", Config.DbConnectionString)
 	if err != nil {
 		panic("Could not connect to the database")
 	}

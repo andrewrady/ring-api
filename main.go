@@ -4,27 +4,27 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
+
+	Config "rings-api/config"
+	Rings "rings-api/rings"
+	Users "rings-api/users"
 
 	"github.com/gorilla/mux"
 )
 
-var mySigningKey = []byte(os.Getenv("mySigningKey"))
-var dbConnectionString = "host=" + os.Getenv("dbHost") + " port=" + os.Getenv("dbPort") + " user=" + os.Getenv("dbUser") + " dbname=" + os.Getenv("dbName") + " password=" + os.Getenv("dbPassword") + " sslmode=disable"
-
 func handleRequest() {
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/rings", AllRings).Methods("GET")
-	myRouter.Handle("/rings", isAuthorized(NewRing)).Methods("POST")
-	myRouter.Handle("/rings/{id}", isAuthorized(ShowRing)).Methods("GET")
-	myRouter.Handle("/rings/{id}", isAuthorized(DeleteRing)).Methods("DELETE")
-	myRouter.Handle("/rings/{id}", isAuthorized(UpdateRing)).Methods("PUT")
+	myRouter.HandleFunc("/rings", Rings.AllRings).Methods("GET")
+	myRouter.Handle("/rings", isAuthorized(Rings.NewRing)).Methods("POST")
+	myRouter.Handle("/rings/{id}", isAuthorized(Rings.ShowRing)).Methods("GET")
+	myRouter.Handle("/rings/{id}", isAuthorized(Rings.DeleteRing)).Methods("DELETE")
+	myRouter.Handle("/rings/{id}", isAuthorized(Rings.UpdateRing)).Methods("PUT")
 	//User Routes
-	myRouter.Handle("/users", isAuthorized(GetUsers)).Methods("GET")
-	myRouter.Handle("/users", isAuthorized(NewUser)).Methods("POST")
-	myRouter.HandleFunc("/users/login", UserLogin).Methods("POST")
+	myRouter.Handle("/users", isAuthorized(Users.GetUsers)).Methods("GET")
+	myRouter.Handle("/users", isAuthorized(Users.NewUser)).Methods("POST")
+	myRouter.HandleFunc("/users/login", Users.UserLogin).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", myRouter))
 }
 
@@ -36,7 +36,7 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handle
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("There was an error")
 				}
-				return mySigningKey, nil
+				return Config.MySigningKey, nil
 			})
 
 			if err != nil {
@@ -54,6 +54,6 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handle
 
 func main() {
 	fmt.Println("Server is running")
-	InitialMigration()
+	Rings.InitialMigration()
 	handleRequest()
 }
