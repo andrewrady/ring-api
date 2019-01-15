@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	Config "rings-api/config"
+	Config "ring-api/config"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"

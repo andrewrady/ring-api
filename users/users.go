@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	Config "rings-api/config"
+	Config "ring-api/config"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"

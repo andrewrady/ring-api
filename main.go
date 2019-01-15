@@ -7,9 +7,9 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 
-	Config "rings-api/config"
-	Rings "rings-api/rings"
-	Users "rings-api/users"
+	Config "ring-api/config"
+	Rings "ring-api/rings"
+	Users "ring-api/users"
 
 	"github.com/gorilla/mux"
 )
