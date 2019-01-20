@@ -18,8 +18,9 @@
 #
 # [[override]]
 #  name = "github.com/x/y"
-#  version = "2.4.0"
-
+#  version =]
+#
+#  
 
 [[constraint]]
   name = "github.com/dgrijalva/jwt-go"
@@ -36,3 +37,8 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/crypto"
+
+[metadata.heroku]
+  root-package = "ring-api"
+  go-version = "1.11"
+  install = ["./..."]
