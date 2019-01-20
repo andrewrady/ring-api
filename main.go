@@ -24,7 +24,7 @@ func handleRequest() {
 	myRouter.Handle("/rings/{id}", isAuthorized(Rings.UpdateRing)).Methods("PUT")
 	//User Routes
 	myRouter.Handle("/users", isAuthorized(Users.GetUsers)).Methods("GET")
-	myRouter.Handle("/users", isAuthorized(Users.NewUser)).Methods("POST")
+	myRouter.HandleFunc("/users", Users.NewUser).Methods("POST")
 	myRouter.HandleFunc("/users/login", Users.UserLogin).Methods("POST")
 	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), myRouter))
 }
