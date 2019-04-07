@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
@@ -26,7 +26,7 @@ func handleRequest() {
 	myRouter.Handle("/users", isAuthorized(Users.GetUsers)).Methods("GET")
 	myRouter.Handle("/users", isAuthorized(Users.NewUser)).Methods("POST")
 	myRouter.HandleFunc("/users/login", Users.UserLogin).Methods("POST")
-	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), myRouter))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), myRouter))
 }
 
 func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
@@ -54,7 +54,7 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handle
 }
 
 func main() {
-	fmt.Println("Server is running")
+	fmt.Println("Server is running on port " + os.Getenv("PORT"))
 	Rings.InitialMigration()
 	handleRequest()
 }
