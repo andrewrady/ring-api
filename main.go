@@ -20,7 +20,7 @@ func handleRequest() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With:", "Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
-	origins := handlers.AllowedOrigins([]string{"localhost:3000", "http://www.intermountainata.com"})
+	origins := handlers.AllowedOrigins([]string{"http://localhost:3000", "http://www.intermountainata.com"})
 	myRouter.HandleFunc("/rings", Rings.AllRings).Methods("GET")
 	myRouter.Handle("/rings", isAuthorized(Rings.NewRing)).Methods("POST")
 	myRouter.Handle("/rings/{id}", isAuthorized(Rings.ShowRing)).Methods("GET")
