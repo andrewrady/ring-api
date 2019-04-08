@@ -12,11 +12,15 @@ import (
 	Rings "ring-api/rings"
 	Users "ring-api/users"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
 func handleRequest() {
 	myRouter := mux.NewRouter().StrictSlash(true)
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With:", "Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
+	origins := handlers.AllowedOrigins([]string{"localhost:3000", "http://www.intermountainata.com"})
 	myRouter.HandleFunc("/rings", Rings.AllRings).Methods("GET")
 	myRouter.Handle("/rings", isAuthorized(Rings.NewRing)).Methods("POST")
 	myRouter.Handle("/rings/{id}", isAuthorized(Rings.ShowRing)).Methods("GET")
@@ -26,7 +30,7 @@ func handleRequest() {
 	myRouter.Handle("/users", isAuthorized(Users.GetUsers)).Methods("GET")
 	myRouter.Handle("/users", isAuthorized(Users.NewUser)).Methods("POST")
 	myRouter.HandleFunc("/users/login", Users.UserLogin).Methods("POST")
-	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), myRouter))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(headers, methods, origins)(myRouter)))
 }
 
 func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
